@@ -1,7 +1,7 @@
 {
   "name": "go-imports",
   "main": "./lib/go-imports",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Auto import Go packages via the goimports command line tool",
   "activationCommands": {
     "atom-workspace": "go-imports:process"

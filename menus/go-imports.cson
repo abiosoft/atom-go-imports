@@ -3,7 +3,7 @@
   'atom-text-editor': [
     {
       'label': 'Run goimports'
-      'command': 'go-imports:toggle'
+      'command': 'go-imports:process'
     }
   ]
 'menu': [
@@ -14,7 +14,7 @@
       'submenu': [
         {
           'label': 'Run goimports'
-          'command': 'go-imports:toggle'
+          'command': 'go-imports:process'
         }
       ]
     ]
