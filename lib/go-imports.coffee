@@ -16,21 +16,21 @@ module.exports =
     @subscriptions.dispose()
 
   process: ->
-      buffer = atom.workspace.getActiveTextEditor()
-      buffer.save() if buffer.isModified()
+      editor = atom.workspace.getActiveTextEditor()
 
-      @filePath = buffer.getPath()
-      if (@filePath.lastIndexOf ".go") != (@filePath.length - 3)
-          atom.notifications.addError "goimports only support .go files"
+      if !editor.getLastCursor().getScopeDescriptor().scopes.includes("source.go")
+          atom.notifications.addError "goimports only support Go files"
           return
 
       command = atom.config.get 'go-imports.path'
-      args = ["-w", "#{@filePath}"]
+      stdout = (output)=>
+        editor.buffer.setTextViaDiff(output)
       stderr = (output)=>
-        @result = output
+        atom.notifications.addError(output)
       exit = (code)=>
         if code != 0
-          atom.notifications.addError @result
-        else
-          buffer.save()
-      process = new BufferedProcess({command, args, stderr, exit})
+          atom.notifications.addError(output)
+      process = new BufferedProcess({command, stdout, stderr})
+      process.process.stdin.setEncoding = 'utf-8'
+      process.process.stdin.write(editor.getText())
+      process.process.stdin.end()
